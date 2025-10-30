@@ -17,7 +17,6 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
         logging.FileHandler('todo_app.log'),
-        logging.StreamHandler()
     ]
 )
 
@@ -97,7 +96,7 @@ def main():
             
             if choice == "a":
                 # Ajouter une tâche
-                title = input(f"{Colors.highlight('📝 Titre de la tâche:')} ")
+                title = input(f"{Colors.highlight('Titre de la tâche:')} ")
                 if manager.add_task(title):
                     print(Colors.success("Tâche ajoutée avec succès!"))
                 else:
@@ -112,7 +111,7 @@ def main():
                 manager.list_tasks()
                 if len(manager.tasks) > 0:
                     try:
-                        num = int(input(f"{Colors.highlight('🎯 Numéro de la tâche à marquer:')} "))
+                        num = int(input(f"{Colors.highlight('Numéro de la tâche à marquer:')} "))
                         if manager.mark_task_done(num):
                             print(Colors.success("Tâche marquée comme terminée!"))
                         else:
@@ -126,7 +125,7 @@ def main():
                 manager.list_tasks()
                 if len(manager.tasks) > 0:
                     try:
-                        num = int(input(f"{Colors.highlight('🗑️  Numéro de la tâche à supprimer:')} "))
+                        num = int(input(f"{Colors.highlight('Numéro de la tâche à supprimer:')} "))
                         if manager.delete_task(num):
                             print(Colors.success("Tâche supprimée!"))
                         else:
@@ -137,7 +136,7 @@ def main():
                         
             elif choice == "q":
                 # Quitter
-                print(f"\n{Colors.success('Merci d\'avoir utilisé le gestionnaire de tâches. À bientôt! 👋')}")
+                print(f"\n{Colors.success('À bientôt !')}")
                 logger.info("Fermeture de l'application")
                 break
                 

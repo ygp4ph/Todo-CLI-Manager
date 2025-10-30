@@ -4,6 +4,8 @@ Module contenant le gestionnaire de tâches
 import logging
 from models import Task
 from colors import Colors
+import json
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -11,8 +13,10 @@ logger = logging.getLogger(__name__)
 class TodoManager:
     """Gestionnaire principal des tâches"""
     
-    def __init__(self):
+    def __init__(self, filename='tasks.json'):
+        self.filename = filename
         self.tasks = []
+        self.load_tasks()
         logger.info("Initialisation du gestionnaire de tâches")
     
     def add_task(self, title):
@@ -32,6 +36,7 @@ class TodoManager:
         task = Task(title.strip())
         self.tasks.append(task)
         logger.info(f"Tâche ajoutée: {title}")
+        self.save_tasks()
         return True
     
     def list_tasks(self):
@@ -64,6 +69,7 @@ class TodoManager:
         task = self.tasks[task_number - 1]
         task.mark_done()
         logger.info(f"Tâche {task_number} marquée comme terminée")
+        self.save_tasks()
         return True
     
     def delete_task(self, task_number):
@@ -82,4 +88,40 @@ class TodoManager:
             
         task = self.tasks.pop(task_number - 1)
         logger.info(f"Tâche supprimée: {task.title}")
+        self.save_tasks()
         return True
+    
+    def save_tasks(self):
+        """Sauvegarde les tâches dans un fichier JSON"""
+        tasks_data = []
+        for task in self.tasks:
+            tasks_data.append({
+                'title': task.title,
+                'done': task.done,
+                'created_at': task.created_at.isoformat()
+            })
+        
+        with open(self.filename, 'w', encoding='utf-8') as f:
+            json.dump(tasks_data, f, ensure_ascii=False, indent=2)
+        logger.info(f"Tâches sauvegardées dans {self.filename}")
+
+    def load_tasks(self):
+        """Charge les tâches depuis un fichier JSON"""
+        if not os.path.exists(self.filename):
+            logger.info("Aucun fichier de sauvegarde trouvé, démarrage avec liste vide")
+            return
+        
+        try:
+            with open(self.filename, 'r', encoding='utf-8') as f:
+                tasks_data = json.load(f)
+            
+            from datetime import datetime
+            for task_data in tasks_data:
+                task = Task(task_data['title'])
+                task.done = task_data['done']
+                task.created_at = datetime.fromisoformat(task_data['created_at'])
+                self.tasks.append(task)
+            
+            logger.info(f"{len(self.tasks)} tâche(s) chargée(s) depuis {self.filename}")
+        except Exception as e:
+            logger.error(f"Erreur lors du chargement: {e}")

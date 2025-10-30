@@ -24,4 +24,4 @@ class Task:
         else:
             status = f"{Colors.YELLOW} {Colors.RESET}"
             title = f"{Colors.CYAN}{self.title}{Colors.RESET}"
-
+        return f"[{status}] {title}" 

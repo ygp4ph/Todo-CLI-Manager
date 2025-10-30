@@ -20,12 +20,12 @@ class Colors:
     @staticmethod
     def success(text):
         """Texte de succès en vert"""
-        return f"{Colors.GREEN}✓ {text}{Colors.RESET}"
-    
+        return f"{Colors.GREEN}[+] {text}{Colors.RESET}"
+
     @staticmethod
     def error(text):
         """Texte d'erreur en rouge"""
-        return f"{Colors.RED}✗ {text}{Colors.RESET}"
+        return f"{Colors.RED}[X] {text}{Colors.RESET}"
     
     @staticmethod
     def info(text):
